@@ -342,6 +342,24 @@ div[data-testid="stMarkdownContainer"] code {
     font-family: 'JetBrains Mono', monospace;
     font-size: 12px;
 }
+/* Fix code blocks inside review output */
+div[data-testid="stMarkdownContainer"] pre {
+    background: #161b22 !important;
+    border: 1px solid #21262d !important;
+    border-radius: 8px !important;
+}
+div[data-testid="stMarkdownContainer"] pre code {
+    background: transparent !important;
+    color: #e6edf3 !important;
+    font-family: 'JetBrains Mono', monospace !important;
+    font-size: 12px !important;
+}
+.stCodeBlock, [data-testid="stCode"] {
+    background: #161b22 !important;
+}
+.stCodeBlock pre, [data-testid="stCode"] pre {
+    background: #161b22 !important;
+}
 </style>
 """, unsafe_allow_html=True)
 
