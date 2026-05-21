@@ -376,7 +376,7 @@ div[data-testid="stMarkdownContainer"] pre span {
 
 # VS Code Dark+ color palette via Pygments
 VSCODE_CSS = """
-.highlight { background: #1e1e1e; border-radius: 8px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', 'Consolas', monospace; font-size: 13px; line-height: 1.6; border: 1px solid #21262d; }
+.highlight { background: #1e1e1e; border-radius: 8px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', 'Consolas', monospace; font-size: 13px; line-height: 1.6; border: 1px solid #21262d; white-space: pre; }
 .highlight .c,  .highlight .c1, .highlight .cm { color: #6a9955; font-style: italic; } /* comments - green */
 .highlight .k,  .highlight .kd, .highlight .kn, .highlight .kp, .highlight .kr { color: #569cd6; font-weight: bold; } /* keywords - blue */
 .highlight .kt { color: #4ec9b0; } /* type keywords - teal */
@@ -508,12 +508,14 @@ def generate_code(task, tech_stack):
 Task: {task}
 Tech Stack: {tech}
 
-You MUST respond with ONLY a valid JSON object. No text before or after. No markdown fences around the JSON itself.
-Escape all newlines in the code field as \\n. Escape all double quotes in the code as \\".
+Respond with ONLY a valid JSON object. No text before or after. No markdown fences around the JSON itself.
+IMPORTANT: In the "code" field, use actual newline characters (press Enter) for each new line. Do NOT write \\n as text.
 
 {{
     "filename": "appropriate_filename.py",
-    "code": "line1\\nline2\\nline3",
+    "code": "first line
+second line
+third line",
     "explanation": "brief explanation"
 }}"""
     response = ask_model(prompt)
@@ -523,14 +525,16 @@ Escape all newlines in the code field as \\n. Escape all double quotes in the co
     # Try JSON extraction first
     result = extract_json(response)
     if result and "code" in result and len(result["code"]) > 10:
-        result["code"] = result["code"].replace("\\n", "\n")
+        code = result["code"]
+        # Restore escaped newlines
+        code = code.replace("\\n", "\n").replace("\\t", "\t")
+        result["code"] = code
         return result
 
     # Fallback 1: extract ```lang ... ``` block
     code_match = re.search(r"```(?:\w+)?\n(.*?)```", response, re.DOTALL)
     if code_match:
         code = code_match.group(1).strip()
-        # Try to get filename from response
         fname_match = re.search(r'"filename"\s*:\s*"([^"]+)"', response)
         fname = fname_match.group(1) if fname_match else "generated.py"
         exp_match = re.search(r'"explanation"\s*:\s*"([^"]+)"', response)
