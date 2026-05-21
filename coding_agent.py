@@ -360,6 +360,14 @@ div[data-testid="stMarkdownContainer"] pre code {
 .stCodeBlock pre, [data-testid="stCode"] pre {
     background: #161b22 !important;
 }
+/* Force all code text to be bright */
+.stCodeBlock code, .stCodeBlock span,
+[data-testid="stCode"] code, [data-testid="stCode"] span,
+div[data-testid="stMarkdownContainer"] pre span {
+    color: #e6edf3 !important;
+    opacity: 1 !important;
+    filter: none !important;
+}
 </style>
 """, unsafe_allow_html=True)
 
