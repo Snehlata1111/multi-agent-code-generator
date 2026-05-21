@@ -789,5 +789,18 @@ if st.session_state.code_review:
             </div>
         </div>
     """, unsafe_allow_html=True)
-    st.markdown(st.session_state.code_review)
+
+    # Split review text on code blocks and render each part
+    review_text = st.session_state.code_review
+    parts = re.split(r"(```(?:\w+)?\n.*?```)", review_text, flags=re.DOTALL)
+    for part in parts:
+        code_block = re.match(r"```(\w+)?\n(.*?)```", part, re.DOTALL)
+        if code_block:
+            lang = code_block.group(1) or "python"
+            code = code_block.group(2).strip()
+            render_code(code, lang)
+        else:
+            if part.strip():
+                st.markdown(part)
+
     st.markdown("</div>", unsafe_allow_html=True)
