@@ -462,30 +462,45 @@ Respond with exactly this JSON structure:
 
 def generate_code(task, tech_stack):
     tech = ", ".join(tech_stack) if isinstance(tech_stack, list) else tech_stack
-    prompt = f"""You are a senior software engineer. Generate production-ready code for the task below.
+    prompt = f"""You are a senior software engineer. Generate code for the task below.
 
 Task: {task}
 Tech Stack: {tech}
 
-Respond with ONLY a valid JSON object — no explanation outside the JSON, no markdown fences.
-Use \\n for newlines inside the "code" string value.
+You MUST respond with ONLY a valid JSON object. No text before or after. No markdown fences around the JSON itself.
+Escape all newlines in the code field as \\n. Escape all double quotes in the code as \\".
 
 {{
     "filename": "appropriate_filename.py",
-    "code": "full code here with \\n for line breaks",
-    "explanation": "brief explanation of what the code does"
+    "code": "line1\\nline2\\nline3",
+    "explanation": "brief explanation"
 }}"""
     response = ask_model(prompt)
     if not response:
         return {"filename": "example.py", "code": "# Code generation failed", "explanation": "API request failed."}
+
+    # Try JSON extraction first
     result = extract_json(response)
-    if result:
-        if "code" in result:
-            result["code"] = result["code"].replace("\\n", "\n")
+    if result and "code" in result and len(result["code"]) > 10:
+        result["code"] = result["code"].replace("\\n", "\n")
         return result
+
+    # Fallback 1: extract ```lang ... ``` block
     code_match = re.search(r"```(?:\w+)?\n(.*?)```", response, re.DOTALL)
-    code = code_match.group(1).strip() if code_match else "# Could not extract code"
-    return {"filename": "generated.py", "code": code, "explanation": "Code extracted from response."}
+    if code_match:
+        code = code_match.group(1).strip()
+        # Try to get filename from response
+        fname_match = re.search(r'"filename"\s*:\s*"([^"]+)"', response)
+        fname = fname_match.group(1) if fname_match else "generated.py"
+        exp_match = re.search(r'"explanation"\s*:\s*"([^"]+)"', response)
+        exp = exp_match.group(1) if exp_match else "Code extracted from response."
+        return {"filename": fname, "code": code, "explanation": exp}
+
+    # Fallback 2: treat entire response as code if it looks like code
+    if any(kw in response for kw in ["import ", "def ", "class ", "const ", "function ", "var ", "let "]):
+        return {"filename": "generated.py", "code": response.strip(), "explanation": "Code extracted from response."}
+
+    return {"filename": "generated.py", "code": "# Could not extract code\n# Raw response:\n# " + response[:200], "explanation": "Extraction failed."}
 
 def review_code(code):
     prompt = f"""You are a senior code reviewer. Review this code and provide:
