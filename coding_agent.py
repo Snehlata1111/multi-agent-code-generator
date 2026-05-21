@@ -344,21 +344,17 @@ div[data-testid="stMarkdownContainer"] code {
 }
 /* Fix code blocks inside review output */
 div[data-testid="stMarkdownContainer"] pre {
-    background: #161b22 !important;
+    background: #1e1e1e !important;
     border: 1px solid #21262d !important;
     border-radius: 8px !important;
 }
 div[data-testid="stMarkdownContainer"] pre code {
     background: transparent !important;
-    color: #e6edf3 !important;
     font-family: 'JetBrains Mono', monospace !important;
     font-size: 12px !important;
 }
-.stCodeBlock, [data-testid="stCode"] {
-    background: #161b22 !important;
-}
 .stCodeBlock pre, [data-testid="stCode"] pre {
-    background: #161b22 !important;
+    background: #1e1e1e !important;
 }
 /* Force all code text to be bright */
 .stCodeBlock code, .stCodeBlock span,
