@@ -4,6 +4,9 @@ import re
 import streamlit as st
 from huggingface_hub import InferenceClient
 from pathlib import Path
+from pygments import highlight
+from pygments.lexers import get_lexer_by_name, guess_lexer, TextLexer
+from pygments.formatters import HtmlFormatter
 
 # Load .env file if present
 DOTENV_PATH = Path(__file__).parent / ".env"
@@ -368,6 +371,44 @@ div[data-testid="stMarkdownContainer"] pre span {
 """, unsafe_allow_html=True)
 
 # =========================
+# SYNTAX HIGHLIGHTED CODE RENDERER
+# =========================
+
+# VS Code Dark+ color palette via Pygments
+VSCODE_CSS = """
+.highlight { background: #1e1e1e; border-radius: 8px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', 'Consolas', monospace; font-size: 13px; line-height: 1.6; border: 1px solid #21262d; }
+.highlight .c,  .highlight .c1, .highlight .cm { color: #6a9955; font-style: italic; } /* comments - green */
+.highlight .k,  .highlight .kd, .highlight .kn, .highlight .kp, .highlight .kr { color: #569cd6; font-weight: bold; } /* keywords - blue */
+.highlight .kt { color: #4ec9b0; } /* type keywords - teal */
+.highlight .s,  .highlight .s1, .highlight .s2, .highlight .sb, .highlight .sc { color: #ce9178; } /* strings - orange */
+.highlight .mi, .highlight .mf, .highlight .mh { color: #b5cea8; } /* numbers - light green */
+.highlight .n  { color: #d4d4d4; } /* names - light grey */
+.highlight .na { color: #9cdcfe; } /* attribute names - light blue */
+.highlight .nb { color: #dcdcaa; } /* builtins - yellow */
+.highlight .nc { color: #4ec9b0; } /* class names - teal */
+.highlight .nf { color: #dcdcaa; } /* function names - yellow */
+.highlight .nn { color: #d4d4d4; } /* namespace */
+.highlight .o  { color: #d4d4d4; } /* operators */
+.highlight .p  { color: #d4d4d4; } /* punctuation */
+.highlight .bp { color: #569cd6; } /* self/cls */
+.highlight .vi { color: #9cdcfe; } /* instance vars */
+.highlight .err { color: #f44747; background: none; } /* errors - red */
+"""
+
+def render_code(code, ext):
+    try:
+        lexer = get_lexer_by_name(ext, stripall=True)
+    except Exception:
+        try:
+            lexer = guess_lexer(code)
+        except Exception:
+            lexer = TextLexer()
+    formatter = HtmlFormatter(style="monokai", noclasses=False, nowrap=False)
+    highlighted = highlight(code, lexer, formatter)
+    st.markdown(f"<style>{VSCODE_CSS}</style>{highlighted}", unsafe_allow_html=True)
+
+
+# =========================
 # HUGGING FACE API CHECK
 # =========================
 
@@ -707,7 +748,7 @@ if st.session_state.generated_code:
     </div>
     """, unsafe_allow_html=True)
 
-    st.code(result["code"], language=ext)
+    render_code(result["code"], ext)
 
     st.markdown(f"""
     <div class="card" style="margin-top:16px;">
