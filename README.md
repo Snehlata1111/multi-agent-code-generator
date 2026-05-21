@@ -3,6 +3,7 @@
 > 🤖 A multi-agent AI coding assistant built with Streamlit and Hugging Face. Describe a feature, get an architecture plan, generate production-ready code, and run an automated review — all in one workflow.
 
 [![GitHub](https://img.shields.io/badge/GitHub-Snehlata1111-181717?style=flat&logo=github)](https://github.com/Snehlata1111/multi-agent-code-generator)
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Streamlit-FF4B4B?style=flat&logo=streamlit&logoColor=white)](https://multi-agent-code-generator-9ybmy9oyaxi7zoct7pgw9b.streamlit.app/)
 [![Python](https://img.shields.io/badge/Python-3.12-3776AB?style=flat&logo=python&logoColor=white)](https://python.org)
 [![Streamlit](https://img.shields.io/badge/Streamlit-1.x-FF4B4B?style=flat&logo=streamlit&logoColor=white)](https://streamlit.io)
 [![Hugging Face](https://img.shields.io/badge/HuggingFace-Qwen2.5--72B-FFD21E?style=flat&logo=huggingface&logoColor=black)](https://huggingface.co)
@@ -157,4 +158,6 @@ Create a URL shortener service with click tracking and analytics
 <div align="center">
     <b>Empowering Developers with Autonomous Engineering Agents</b><br/>
     <a href="https://github.com/Snehlata1111/multi-agent-code-generator">github.com/Snehlata1111/multi-agent-code-generator</a>
+    &nbsp;·&nbsp;
+    <a href="https://multi-agent-code-generator-9ybmy9oyaxi7zoct7pgw9b.streamlit.app/">🚀 Live Demo</a>
 </div>
