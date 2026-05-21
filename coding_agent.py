@@ -540,12 +540,13 @@ step3 = "done" if st.session_state.code_review else ("active" if st.session_stat
 def step_html(num, label, state):
     circle_class = f"step-{state}"
     label_class  = "active" if state in ("active", "done") else ""
-    icon = "✓" if state == "done" else str(num)
-    return f"""
-    <div class="step">
-        <div class="step-circle {circle_class}">{icon}</div>
-        <span class="step-label {label_class}">{label}</span>
-    </div>"""
+    icon = "&#10003;" if state == "done" else str(num)
+    return (
+        '<div class="step">'
+        f'<div class="step-circle {circle_class}">{icon}</div>'
+        f'<span class="step-label {label_class}">{label}</span>'
+        '</div>'
+    )
 
 st.markdown(f"""
 <div class="pipeline">
