@@ -325,6 +325,23 @@ html, body, [class*="css"] {
 div[data-testid="stMarkdownContainer"] p {
     color: #c9d1d9;
 }
+div[data-testid="stMarkdownContainer"] li {
+    color: #c9d1d9;
+}
+div[data-testid="stMarkdownContainer"] h1,
+div[data-testid="stMarkdownContainer"] h2,
+div[data-testid="stMarkdownContainer"] h3,
+div[data-testid="stMarkdownContainer"] h4 {
+    color: #e6edf3;
+}
+div[data-testid="stMarkdownContainer"] code {
+    background: #21262d;
+    color: #a371f7;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+}
 </style>
 """, unsafe_allow_html=True)
 
