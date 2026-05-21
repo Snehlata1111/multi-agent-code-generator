@@ -124,7 +124,6 @@ Get a free token at [huggingface.co/settings/tokens](https://huggingface.co/sett
 streamlit run coding_agent.py
 ```
 
-The app opens at **http://localhost:8501**.
 
 ---
 
